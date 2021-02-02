@@ -8,12 +8,15 @@ class Medicine {
   TimeOfDay alarmTime;
   var imageurl;
   int quantity;
+  bool isTaken;
 
-  Medicine(
-      {@required this.id,
-      @required this.title,
-      @required this.description,
-      @required this.alarmTime,
-      @required this.imageurl,
-      @required this.quantity});
+  Medicine({
+    @required this.id,
+    @required this.title,
+    @required this.description,
+    @required this.alarmTime,
+    @required this.imageurl,
+    @required this.quantity,
+    this.isTaken,
+  });
 }
