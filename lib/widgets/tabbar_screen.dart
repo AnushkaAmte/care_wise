@@ -1,6 +1,8 @@
 /* import 'package:CareWise/inventory.dart';
 import 'package:CareWise/screens/logbook.dart';*/
 
+import 'package:carewise/screens/create_account.dart';
+import 'package:carewise/screens/login_page.dart';
 import 'package:flutter/material.dart';
 
 import '../screens/medicine_overview.dart';
@@ -92,7 +94,10 @@ class _TabBarScreenState extends State<TabBarScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(children: <Widget>[
-                Icon(Icons.settings),
+                IconButton(
+                  icon: Icon(Icons.settings),
+                  onPressed: () {},
+                ),
               ]),
             ),
           ],
@@ -120,8 +125,8 @@ class _TabBarScreenState extends State<TabBarScreen> {
         body: TabBarView(
           children: <Widget>[
             MedicineOverview(),
-            /* Inventory(),
-            LogBook(), */
+            LoginPage(),
+            CreateAccount(),
           ],
         ),
       ),
