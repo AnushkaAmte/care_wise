@@ -1,9 +1,11 @@
+import 'package:carewise/providers/medicine.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'screens/login_page.dart';
 import 'screens/medicine_detail.dart';
 import 'screens/logbook_screen.dart';
+import 'screens/inventory.dart';
 import 'providers/medicine_list.dart';
 import 'providers/logbook_provider.dart';
 
@@ -21,6 +23,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => LogBookProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => MedicineProvider(),
         )
       ],
       child: MaterialApp(
@@ -35,6 +40,7 @@ class MyApp extends StatelessWidget {
         routes: {
           MedicineDetail.routeName: (ctx) => MedicineDetail(),
           LogbookScreen.routeName: (ctx) => LogbookScreen(),
+          Inventory.routeName: (ctx) => Inventory(),
         },
       ),
     );

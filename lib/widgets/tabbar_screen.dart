@@ -1,10 +1,9 @@
-//import 'package:carewise/providers/medicine_list.dart';
-import 'package:carewise/screens/logbook_screen.dart';
 import 'package:flutter/material.dart';
 //import 'package:provider/provider.dart';
 
 import '../screens/medicine_overview.dart';
-import '../screens/login_page.dart';
+import '../screens/inventory.dart';
+import '../screens/logbook_screen.dart';
 
 class TabBarScreen extends StatefulWidget {
   @override
@@ -104,7 +103,7 @@ class _TabBarScreenState extends State<TabBarScreen> {
         body: TabBarView(
           children: <Widget>[
             MedicineOverview(),
-            LoginPage(),
+            Inventory(),
             LogbookScreen(),
           ],
         ),

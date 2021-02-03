@@ -1,6 +1,6 @@
-//import 'package:CareWise/widgets/tabbar_screen.dart';
 import 'package:flutter/material.dart';
 import './create_account.dart';
+import '../widgets/tabbar_screen.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -59,10 +59,10 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(width: double.infinity, height: 20.0),
             FlatButton(
               onPressed: () {
-                /* Navigator.push(
+                Navigator.push(
                   context,
                   new MaterialPageRoute(builder: (ctxt) => new TabBarScreen()),
-                ); */
+                );
               },
               child: Text('Login'),
               textColor: Colors.white,
