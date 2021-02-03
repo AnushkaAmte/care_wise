@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 
 import 'screens/login_page.dart';
 import 'screens/medicine_detail.dart';
+import 'screens/logbook_screen.dart';
 import 'providers/medicine_list.dart';
+import 'providers/logbook_provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,8 +14,15 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (ctx) => MedicineList(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => MedicineList(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => LogBookProvider(),
+        )
+      ],
       child: MaterialApp(
         title: 'CareWise',
         debugShowCheckedModeBanner: false,
@@ -25,6 +34,7 @@ class MyApp extends StatelessWidget {
         home: LoginPage(),
         routes: {
           MedicineDetail.routeName: (ctx) => MedicineDetail(),
+          LogbookScreen.routeName: (ctx) => LogbookScreen(),
         },
       ),
     );

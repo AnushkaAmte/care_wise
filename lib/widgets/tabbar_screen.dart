@@ -1,11 +1,10 @@
-/* import 'package:CareWise/inventory.dart';
-import 'package:CareWise/screens/logbook.dart';*/
-
-import 'package:carewise/screens/create_account.dart';
-import 'package:carewise/screens/login_page.dart';
+//import 'package:carewise/providers/medicine_list.dart';
+import 'package:carewise/screens/logbook_screen.dart';
 import 'package:flutter/material.dart';
+//import 'package:provider/provider.dart';
 
 import '../screens/medicine_overview.dart';
+import '../screens/login_page.dart';
 
 class TabBarScreen extends StatefulWidget {
   @override
@@ -15,6 +14,7 @@ class TabBarScreen extends StatefulWidget {
 class _TabBarScreenState extends State<TabBarScreen> {
   @override
   Widget build(BuildContext context) {
+    //final medicineData = Provider.of<MedicineList>(context);
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -45,44 +45,23 @@ class _TabBarScreenState extends State<TabBarScreen> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  FlatButton(
-                    onPressed: () {},
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          "Morning",
-                          style: TextStyle(fontSize: 20.0),
-                        ),
-                        Icon(Icons.wb_sunny),
-                      ],
-                    ),
+                  SwitchListTile(
+                    onChanged: (bool v) {},
+                    value: false,
+                    title: const Text("Morning"),
+                    secondary: Icon(Icons.wb_sunny),
                   ),
-                  FlatButton(
-                    onPressed: () {},
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          "Afternoon",
-                          style: TextStyle(fontSize: 20.0),
-                        ),
-                        Icon(Icons.wb_sunny_rounded),
-                      ],
-                    ),
+                  SwitchListTile(
+                    onChanged: (bool v) {},
+                    value: false,
+                    title: const Text("Afternoon"),
+                    secondary: Icon(Icons.wb_sunny),
                   ),
-                  FlatButton(
-                    onPressed: () {},
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          "Evening",
-                          style: TextStyle(fontSize: 20.0),
-                        ),
-                        Icon(Icons.nights_stay),
-                      ],
-                    ),
+                  SwitchListTile(
+                    onChanged: (bool v) {},
+                    value: false,
+                    title: const Text("Evening"),
+                    secondary: Icon(Icons.nightlight_round),
                   ),
                 ],
               )
@@ -126,7 +105,7 @@ class _TabBarScreenState extends State<TabBarScreen> {
           children: <Widget>[
             MedicineOverview(),
             LoginPage(),
-            CreateAccount(),
+            LogbookScreen(),
           ],
         ),
       ),
