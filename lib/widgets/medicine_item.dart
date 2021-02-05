@@ -1,16 +1,21 @@
-import 'package:carewise/screens/medicine_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
-class MedicineItem extends StatelessWidget {
-  final String id;
+import '../providers/medicine.dart';
+import '../providers/logbook_provider.dart';
+import '../screens/medicine_detail.dart';
+
+/* final String id;
   final String title;
   final imageurl;
   final String description;
   final TimeOfDay alarmtime;
 
   MedicineItem(
-      this.id, this.title, this.imageurl, this.description, this.alarmtime);
+      this.id, this.title, this.imageurl, this.description, this.alarmtime); */
+
+class MedicineItem extends StatelessWidget {
   String formatTimeOfDay(TimeOfDay tod) {
     final now = new DateTime.now();
     final dt = DateTime(now.year, now.month, now.day, tod.hour, tod.minute);
@@ -20,13 +25,16 @@ class MedicineItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final med = Provider.of<Medicine>(context);
+    final log = Provider.of<LogBookProvider>(context, listen: false);
+
     return GridTile(
       child: Center(
         child: GestureDetector(
           onTap: () {
             Navigator.of(context).pushNamed(
               MedicineDetail.routeName,
-              arguments: id,
+              arguments: med.id,
             );
 
             //Overlay();
@@ -50,7 +58,7 @@ class MedicineItem extends StatelessWidget {
                             'https://www.practostatic.com/practopedia-v2-images/res-750/aa8a521bcd0f4494ceb54bee5171d1c7c01ee09b1.jpg'),
                   ),
                   Text(
-                    title,
+                    med.title,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15.0,
@@ -59,14 +67,18 @@ class MedicineItem extends StatelessWidget {
                   SizedBox(
                     height: 8.0,
                   ),
-                  Text(description),
+                  Text(med.description),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
                       Icon(Icons.alarm),
-                      Text(formatTimeOfDay(alarmtime)),
+                      Text(formatTimeOfDay(med.alarmTime)),
                       FlatButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          log.addItem(med.id, med.title);
+                          med.updateCount();
+                          print(med.quantity);
+                        },
                         child: Text("Check"),
                         color: Colors.green,
                         textColor: Colors.white,

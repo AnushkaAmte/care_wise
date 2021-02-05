@@ -1,7 +1,7 @@
+import 'package:carewise/providers/medicine_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/medicine_list.dart';
 import '../widgets/inventory_item.dart';
 
 class Inventory extends StatelessWidget {
