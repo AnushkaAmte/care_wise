@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/medicine_grid.dart';
+import '../screens/add_medicine.dart';
 
 class MedicineOverview extends StatelessWidget {
   @override
@@ -12,6 +13,15 @@ class MedicineOverview extends StatelessWidget {
             child: MedicineGrid(),
           ),
         ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton(
+        tooltip: 'Add Medicine',
+        onPressed: () {
+          Navigator.of(context).pushNamed(AddMedicine.routeName);
+        },
+        child: Icon(Icons.add),
+        elevation: 2.0,
       ),
     );
   }

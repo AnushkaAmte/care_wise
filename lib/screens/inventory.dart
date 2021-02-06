@@ -43,13 +43,6 @@ class Inventory extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton(
-        tooltip: 'Add Item',
-        onPressed: () {},
-        child: Icon(Icons.add),
-        elevation: 2.0,
-      ),
     );
   }
 }

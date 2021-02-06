@@ -52,9 +52,9 @@ class MedicineItem extends StatelessWidget {
                   CircleAvatar(
                     radius: 40.0,
                     backgroundColor: Colors.black,
-                    backgroundImage: //imageurl != null
-                        //? FileImage(imageurl):
-                        NetworkImage(
+                    backgroundImage: med.imageurl != null
+                        ? FileImage(med.imageurl)
+                        : NetworkImage(
                             'https://www.practostatic.com/practopedia-v2-images/res-750/aa8a521bcd0f4494ceb54bee5171d1c7c01ee09b1.jpg'),
                   ),
                   Text(
