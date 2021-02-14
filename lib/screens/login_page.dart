@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import './create_account.dart';
-import '../widgets/tabbar_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
+/* import './create_account.dart';
+import '../widgets/tabbar_screen.dart'; */
+import '../widgets/auth_form.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -8,84 +12,64 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _auth = FirebaseAuth.instance;
   bool valueCheck = false;
+  var _isLoading = false;
+  void _submitAuthForm(String email, String username, String password,
+      bool isLogin, BuildContext ctx) async {
+    AuthResult authResult;
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      if (isLogin) {
+        authResult = await _auth.signInWithEmailAndPassword(
+            email: email, password: password);
+      } else {
+        authResult = await _auth.createUserWithEmailAndPassword(
+            email: email, password: password);
+        await Firestore.instance
+            .collection('users')
+            .document(authResult.user.uid)
+            .setData({'username': username, 'email': email});
+      }
+    } on PlatformException catch (err) {
+      var message = 'An error occured.Please check your credentials';
+      if (err.message != null) message = err.message;
+      Scaffold.of(ctx).showSnackBar(SnackBar(
+        content: Text(message),
+      ));
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (err) {
+      print(err);
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'CareWise',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 50.0,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'CareWise',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 50.0,
+                ),
               ),
-            ),
-            SizedBox(width: double.infinity, height: 60.0),
-            TextFormField(
-                decoration: InputDecoration(
-              icon: Icon(Icons.supervised_user_circle),
-              hintText: 'Username',
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(30.0)),
-            )),
-            SizedBox(width: double.infinity, height: 10.0),
-            TextFormField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  icon: Icon(Icons.lock),
-                  hintText: 'Password',
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0)),
-                )),
-            Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
-              Checkbox(
-                  value: this.valueCheck,
-                  checkColor: Colors.green,
-                  onChanged: (bool value) {
-                    setState(() {
-                      this.valueCheck = value;
-                    });
-                  }),
-              Text('Remember Me'),
-            ]),
-            SizedBox(width: double.infinity, height: 20.0),
-            FlatButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(builder: (ctxt) => new TabBarScreen()),
-                );
-              },
-              child: Text('Login'),
-              textColor: Colors.white,
-              color: Colors.green,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(40.0)),
-            ),
-            SizedBox(width: double.infinity, height: 20.0),
-            Text('Not a User?'),
-            FlatButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(builder: (ctxt) => new CreateAccount()),
-                );
-              },
-              child: Text('Create New Account'),
-              color: Colors.green,
-              textColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(40.0)),
-            ),
-          ],
+              SizedBox(width: double.infinity, height: 60.0),
+              AuthForm(_submitAuthForm,_isLoading),
+            ],
+          ),
         ),
       ),
     );

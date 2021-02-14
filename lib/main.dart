@@ -1,3 +1,5 @@
+import 'package:carewise/widgets/tabbar_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -41,7 +43,15 @@ class MyApp extends StatelessWidget {
           buttonColor: Color(0xA846A0),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: LoginPage(),
+        home: StreamBuilder(
+          stream: FirebaseAuth.instance.onAuthStateChanged,
+          builder: (ctx, userSnapshot) {
+            if (userSnapshot.hasData) {
+              return TabBarScreen();
+            }
+            return LoginPage();
+          },
+        ),
         routes: {
           MedicineDetail.routeName: (ctx) => MedicineDetail(),
           LogbookScreen.routeName: (ctx) => LogbookScreen(),
