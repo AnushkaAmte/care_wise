@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 //import 'package:provider/provider.dart';
 
@@ -73,8 +74,10 @@ class _TabBarScreenState extends State<TabBarScreen> {
               padding: const EdgeInsets.all(8.0),
               child: Row(children: <Widget>[
                 IconButton(
-                  icon: Icon(Icons.settings),
-                  onPressed: () {},
+                  icon: Icon(Icons.logout),
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                  },
                 ),
               ]),
             ),
