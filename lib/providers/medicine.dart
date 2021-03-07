@@ -1,3 +1,4 @@
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +33,37 @@ class Medicine with ChangeNotifier {
     notifyListeners();
   }
 }
+
+/* class Medicines{
+  String id;
+  String title;
+  String description;
+  TimeOfDay alarmTime;
+   var imageurl;
+  int quantity;
+  Medicines({
+    @required this.id,
+    @required this.title,
+    @required this.description,
+    @required this.alarmTime,
+    @required this.imageurl,
+    @required this.quantity,
+  
+  });
+
+  factory  Medicines.fromMap(DocumentSnapshot doc){
+  Map data = doc.data;
+  return Medicines(
+    id: doc.documentID,
+    title: data['title'],
+    description:data['description'],
+    alarmTime: data['alarmTime'],
+    imageurl:data['imageurl'],
+    quantity:data['quantity']
+
+  );
+}
+} */
 
 class MedicineProvider with ChangeNotifier {
   final meds = Provider.of<Medicine>(context);

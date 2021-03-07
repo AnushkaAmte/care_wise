@@ -53,7 +53,7 @@ class MedicineItem extends StatelessWidget {
                     radius: 40.0,
                     backgroundColor: Colors.black,
                     backgroundImage: med.imageurl != null
-                        ? FileImage(med.imageurl)
+                        ? NetworkImage(med.imageurl)
                         : NetworkImage(
                             'https://www.practostatic.com/practopedia-v2-images/res-750/aa8a521bcd0f4494ceb54bee5171d1c7c01ee09b1.jpg'),
                   ),
@@ -76,7 +76,11 @@ class MedicineItem extends StatelessWidget {
                       FlatButton(
                         onPressed: () {
                           log.addItem(med.id, med.title);
+                          //ERROR: Items out of the screen are not getting added to the logbook
+                          //TODO: Resolve this error
+                          //TODO: Check the logbook provider & changenotifier.value
                           med.updateCount();
+                          //This function works correctly
                           print(med.quantity);
                         },
                         child: Text("Check"),
