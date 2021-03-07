@@ -67,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               SizedBox(width: double.infinity, height: 60.0),
-              AuthForm(_submitAuthForm,_isLoading),
+              AuthForm(_submitAuthForm, _isLoading),
             ],
           ),
         ),
