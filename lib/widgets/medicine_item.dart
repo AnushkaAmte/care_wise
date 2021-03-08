@@ -79,7 +79,7 @@ class MedicineItem extends StatelessWidget {
                           //ERROR: Items out of the screen are not getting added to the logbook
                           //TODO: Resolve this error
                           //TODO: Check the logbook provider & changenotifier.value
-                          med.updateCount();
+                           med.updateCount(med.id);
                           //This function works correctly
                           print(med.quantity);
                         },

@@ -1,7 +1,10 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class Medicine with ChangeNotifier {
   String id;
@@ -28,9 +31,18 @@ class Medicine with ChangeNotifier {
     this.isEvening = false,
   });
 
-  void updateCount() {
-    quantity = quantity - 1;
-    notifyListeners();
+  Future<void> updateCount(String id) async {
+    final url =
+        'https://flutter-carewise-default-rtdb.firebaseio.com/medicines/$id.json';
+    try {
+      await http.patch(url,
+          body: json.encode({
+            'quantity': quantity - 1,
+          }));
+      notifyListeners();
+    } catch (error) {
+      throw (error);
+    }
   }
 }
 
