@@ -52,7 +52,8 @@ class LogBookProvider with ChangeNotifier {
       final response = await http.post(url,
           body: json.encode({
             'title': title,
-            'dateTime': DateTime(date.hour, date.minute).toIso8601String(),//FIX this 
+            'dateTime':
+                DateTime(date.hour, date.minute).toIso8601String(), //FIX this
           }));
       _items.add(LogbookItem(
           id: json.decode(response.body)['name'],

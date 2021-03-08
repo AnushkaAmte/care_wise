@@ -14,7 +14,7 @@ class LogItem extends StatelessWidget {
           padding: EdgeInsets.all(8.0),
           child: ListTile(
             title: Text(title),
-            trailing: Text(day.toString()),//FIX this
+            trailing: Text(day.toString()), //FIX this
           )),
     );
   }
