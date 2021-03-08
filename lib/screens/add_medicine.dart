@@ -63,7 +63,8 @@ class _AddMedicineState extends State<AddMedicine> {
         maxWidth: 640,
         imageQuality: 50);
     final pickedImageFile = File(pickedImage.path);
-    StorageReference ref = storageReference.child("gs://${_editedMedicine.id}");
+    StorageReference ref =
+        storageReference.child("gs://${pickedImageFile.toString()}");
     StorageUploadTask uploadTask = ref.putFile(pickedImageFile);
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
     String imageurl = await taskSnapshot.ref.getDownloadURL();
@@ -259,7 +260,7 @@ class _AddMedicineState extends State<AddMedicine> {
                             CircleAvatar(
                               radius: 40.0,
                               backgroundImage: pickedImage != null
-                                  ? FileImage(pickedImage)
+                                  ? NetworkImage(_editedMedicine.imageurl)
                                   : null,
                             ),
                             FlatButton.icon(
