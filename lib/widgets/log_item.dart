@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 class LogItem extends StatelessWidget {
   final String id;
   final String title;
+  final DateTime day;
 
-  const LogItem(this.id, this.title);
+  const LogItem(this.id, this.title, this.day);
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -13,6 +14,7 @@ class LogItem extends StatelessWidget {
           padding: EdgeInsets.all(8.0),
           child: ListTile(
             title: Text(title),
+            trailing: Text(day.toString()),//FIX this
           )),
     );
   }
