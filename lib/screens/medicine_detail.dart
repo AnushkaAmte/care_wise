@@ -1,10 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/medicine_list.dart';
 
-class MedicineDetail extends StatelessWidget {
+class MedicineDetail extends StatefulWidget {
   static const routeName = '/medicine-detail';
+
+  @override
+  _MedicineDetailState createState() => _MedicineDetailState();
+}
+
+class _MedicineDetailState extends State<MedicineDetail> {
+  String formatTimeOfDay(TimeOfDay tod) {
+    final now = new DateTime.now();
+    final dt = DateTime(now.year, now.month, now.day, tod.hour, tod.minute);
+    final format = DateFormat.jm();
+    return format.format(dt);
+  }
+
+  /*@override
+   void initState() {
+    Future.delayed(Duration.zero).then((_) {
+      Navigator.of(context).pop();
+    });
+    super.initState();
+  } */
+
   @override
   Widget build(BuildContext context) {
     final medicineId = ModalRoute.of(context).settings.arguments as String;
@@ -20,7 +42,20 @@ class MedicineDetail extends StatelessWidget {
           ),
           IconButton(
             icon: Icon(Icons.delete),
-            onPressed: () {},
+            onPressed: () async {
+              try {
+                await Provider.of<MedicineList>(context, listen: false)
+                    .deleteItem(loadedMedicine.id);
+              } catch (error) {
+                Scaffold.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Deleting failed'),
+                  ),
+                );
+              }
+              Navigator.of(context)
+                  .pop(); //TRY: put this in a initstate or a didchangedependencies
+            },
           )
         ],
       ),
@@ -43,9 +78,27 @@ class MedicineDetail extends StatelessWidget {
               width: double.infinity,
               height: 20,
             ),
-            TextField(
+            TextFormField(
+              readOnly: true,
               decoration: InputDecoration(
-                helperText: loadedMedicine.title,
+                helperText: 'Medicine Name',
+                hintText: loadedMedicine.title,
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0)),
+              ),
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(
+              width: double.infinity,
+              height: 20,
+            ),
+            TextFormField(
+              readOnly: true,
+              decoration: InputDecoration(
+                hintText: loadedMedicine.description,
+                helperText: 'Description',
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
                 border: OutlineInputBorder(
@@ -58,8 +111,10 @@ class MedicineDetail extends StatelessWidget {
               height: 20,
             ),
             TextField(
+              readOnly: true,
               decoration: InputDecoration(
-                helperText: loadedMedicine.description,
+                hintText: formatTimeOfDay(loadedMedicine.alarmTime),
+                helperText: 'Alarm Time',
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
                 border: OutlineInputBorder(
@@ -72,22 +127,10 @@ class MedicineDetail extends StatelessWidget {
               height: 20,
             ),
             TextField(
+              readOnly: true,
               decoration: InputDecoration(
-                helperText: loadedMedicine.alarmTime.toString(),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0)),
-              ),
-              style: TextStyle(fontSize: 20),
-            ),
-            SizedBox(
-              width: double.infinity,
-              height: 20,
-            ),
-            TextField(
-              decoration: InputDecoration(
-                helperText: loadedMedicine.quantity.toString(),
+                hintText: loadedMedicine.quantity.toString(),
+                helperText: 'Quantity',
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
                 border: OutlineInputBorder(

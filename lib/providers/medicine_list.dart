@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import '../models/custom_exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -67,7 +68,7 @@ class MedicineList with ChangeNotifier {
   }
 
   Medicine findById(String id) {
-    return _items.firstWhere((med) => med.id == id);
+    return _items.firstWhere((med) => med?.id == id, orElse: () => null);
   }
 
   String formatTimeOfDay(TimeOfDay tod) {
@@ -135,5 +136,22 @@ class MedicineList with ChangeNotifier {
     } catch (error) {
       throw error;
     }
+  }
+
+  Future<void> deleteItem(String id) async {
+    final url =
+        'https://flutter-carewise-default-rtdb.firebaseio.com/medicines/$id.json';
+    final existingMedIndex = _items.indexWhere((med) => med.id == id);
+    var existingMed = _items[existingMedIndex];
+
+    _items.removeAt(existingMedIndex);
+    notifyListeners();
+    final response = await http.delete(url);
+    if (response.statusCode >= 400) {
+      _items.insert(existingMedIndex, existingMed);
+      notifyListeners();
+      throw CustomExceptions('Something went wrong, Could not delete');
+    }
+    existingMed = null;
   }
 }
