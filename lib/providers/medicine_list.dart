@@ -154,4 +154,25 @@ class MedicineList with ChangeNotifier {
     }
     existingMed = null;
   }
+
+  Future<void> editAndSetMedicines(String id, Medicine editedMed) async {
+    final medIndex = _items.indexWhere((med) => med.id == id);
+    final url =
+        'https://flutter-carewise-default-rtdb.firebaseio.com/medicines/$id.json';
+    if (medIndex >= 0) {
+      try {
+        await http.patch(url,
+            body: json.encode({
+              'title': editedMed.title,
+              'quantity': editedMed.quantity,
+              'alarmTime': editedMed.alarmTime,
+              'description': editedMed.description,
+            }));
+        _items[medIndex] = editedMed;
+        notifyListeners();
+      } catch (error) {
+        throw error;
+      }
+    }
+  }
 }

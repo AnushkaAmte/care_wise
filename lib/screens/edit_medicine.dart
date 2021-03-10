@@ -13,6 +13,7 @@ class EditMedicine extends StatefulWidget {
 
 class _EditMedicineState extends State<EditMedicine> {
   TimeOfDay _selectedTime;
+  var _isLoading = false;
   final _form = GlobalKey<FormState>();
 
   var _editedMedicine = Medicine(
@@ -49,6 +50,9 @@ class _EditMedicineState extends State<EditMedicine> {
   }
 
   void _saveForm() {
+    setState(() {
+      _isLoading = true;
+    });
     _form.currentState.save();
   }
 
@@ -63,8 +67,18 @@ class _EditMedicineState extends State<EditMedicine> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.save_rounded),
-            onPressed: () {
+            onPressed: () async {
               _saveForm();
+              await Provider.of<MedicineList>(context, listen: false)
+                  .editAndSetMedicines(loadedMedicine.id, _editedMedicine);
+              setState(() {
+                _isLoading = false;
+              });
+              _isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : Navigator.of(context).pop();
             },
           ),
         ],
@@ -104,7 +118,7 @@ class _EditMedicineState extends State<EditMedicine> {
                     title: value,
                     description: _editedMedicine.description,
                     alarmTime: _selectedTime,
-                    imageurl: _editedMedicine.imageurl,
+                    imageurl: loadedMedicine.imageurl,
                     quantity: _editedMedicine.quantity);
               },
             ),
@@ -128,7 +142,7 @@ class _EditMedicineState extends State<EditMedicine> {
                     title: _editedMedicine.title,
                     description: value,
                     alarmTime: _selectedTime,
-                    imageurl: _editedMedicine.imageurl,
+                    imageurl: loadedMedicine.imageurl,
                     quantity: _editedMedicine.quantity);
               },
             ),
@@ -153,7 +167,7 @@ class _EditMedicineState extends State<EditMedicine> {
                     title: _editedMedicine.title,
                     description: _editedMedicine.description,
                     alarmTime: _selectedTime,
-                    imageurl: _editedMedicine.imageurl,
+                    imageurl: loadedMedicine.imageurl,
                     quantity: int.parse(value));
               },
             ),
