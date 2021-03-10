@@ -165,7 +165,7 @@ class MedicineList with ChangeNotifier {
             body: json.encode({
               'title': editedMed.title,
               'quantity': editedMed.quantity,
-              'alarmTime': editedMed.alarmTime,
+              'alarmTime': formatTimeOfDay(editedMed.alarmTime),
               'description': editedMed.description,
             }));
         _items[medIndex] = editedMed;

@@ -16,14 +16,6 @@ class _EditMedicineState extends State<EditMedicine> {
   var _isLoading = false;
   final _form = GlobalKey<FormState>();
 
-  var _editedMedicine = Medicine(
-      id: null,
-      title: '',
-      description: '',
-      quantity: 0,
-      alarmTime: null,
-      imageurl: '');
-
   String formatTimeOfDay(TimeOfDay tod) {
     final now = new DateTime.now();
     final dt = DateTime(now.year, now.month, now.day, tod.hour, tod.minute);
@@ -31,7 +23,7 @@ class _EditMedicineState extends State<EditMedicine> {
     return format.format(dt);
   }
 
-  void _presentTimePicker() {
+  /* void _presentTimePicker() {
     showTimePicker(context: context, initialTime: TimeOfDay.now())
         .then((pickedTime) {
       if (pickedTime == null) return;
@@ -47,7 +39,7 @@ class _EditMedicineState extends State<EditMedicine> {
             quantity: _editedMedicine.quantity);
       });
     });
-  }
+  } */
 
   void _saveForm() {
     setState(() {
@@ -61,16 +53,25 @@ class _EditMedicineState extends State<EditMedicine> {
     final medicineId = ModalRoute.of(context).settings.arguments as String;
     final loadedMedicine =
         Provider.of<MedicineList>(context).findById(medicineId);
+
+    var _editedMedicine = Medicine(
+        id: loadedMedicine.id,
+        title: loadedMedicine.title,
+        description: loadedMedicine.description,
+        quantity: loadedMedicine.quantity,
+        alarmTime: loadedMedicine.alarmTime,
+        imageurl: loadedMedicine.imageurl);
     return Scaffold(
       appBar: AppBar(
         title: Text(loadedMedicine.title),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.save_rounded),
-            onPressed: () async {
+            onPressed: () {
               _saveForm();
-              await Provider.of<MedicineList>(context, listen: false)
+              Provider.of<MedicineList>(context, listen: false)
                   .editAndSetMedicines(loadedMedicine.id, _editedMedicine);
+
               setState(() {
                 _isLoading = false;
               });
@@ -114,12 +115,12 @@ class _EditMedicineState extends State<EditMedicine> {
               style: TextStyle(fontSize: 20),
               onSaved: (value) {
                 _editedMedicine = Medicine(
-                    id: null,
+                    id: loadedMedicine.id,
                     title: value,
-                    description: _editedMedicine.description,
-                    alarmTime: _selectedTime,
+                    description: loadedMedicine.description,
+                    alarmTime: loadedMedicine.alarmTime,
                     imageurl: loadedMedicine.imageurl,
-                    quantity: _editedMedicine.quantity);
+                    quantity: loadedMedicine.quantity);
               },
             ),
             SizedBox(
@@ -138,12 +139,12 @@ class _EditMedicineState extends State<EditMedicine> {
               style: TextStyle(fontSize: 20),
               onSaved: (value) {
                 _editedMedicine = Medicine(
-                    id: null,
-                    title: _editedMedicine.title,
+                    id: loadedMedicine.id,
+                    title: loadedMedicine.title,
                     description: value,
-                    alarmTime: _selectedTime,
+                    alarmTime: loadedMedicine.alarmTime,
                     imageurl: loadedMedicine.imageurl,
-                    quantity: _editedMedicine.quantity);
+                    quantity: loadedMedicine.quantity);
               },
             ),
             SizedBox(
@@ -163,10 +164,10 @@ class _EditMedicineState extends State<EditMedicine> {
               style: TextStyle(fontSize: 20),
               onSaved: (value) {
                 _editedMedicine = Medicine(
-                    id: null,
-                    title: _editedMedicine.title,
-                    description: _editedMedicine.description,
-                    alarmTime: _selectedTime,
+                    id: loadedMedicine.id,
+                    title: loadedMedicine.title,
+                    description: loadedMedicine.description,
+                    alarmTime: loadedMedicine.alarmTime,
                     imageurl: loadedMedicine.imageurl,
                     quantity: int.parse(value));
               },
@@ -183,7 +184,23 @@ class _EditMedicineState extends State<EditMedicine> {
                     : formatTimeOfDay(_selectedTime)),
                 FlatButton(
                   onPressed: () {
-                    _presentTimePicker();
+                    showTimePicker(
+                            context: context, initialTime: TimeOfDay.now())
+                        .then((pickedTime) {
+                      if (pickedTime == null) return;
+
+                      setState(() {
+                        _selectedTime = pickedTime;
+                        _editedMedicine = Medicine(
+                            id: loadedMedicine.id,
+                            title: loadedMedicine.title,
+                            description: loadedMedicine.description,
+                            alarmTime: _selectedTime,
+                            imageurl: loadedMedicine.imageurl,
+                            quantity: loadedMedicine.quantity);
+                      });
+                    });
+
                     // ignore: unnecessary_statements
                   },
                   child: Text("Select Time"),
