@@ -1,3 +1,4 @@
+import 'package:carewise/screens/edit_medicine.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +39,10 @@ class _MedicineDetailState extends State<MedicineDetail> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.edit),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed(EditMedicine.routeName,
+                  arguments: loadedMedicine.id);
+            },
           ),
           IconButton(
             icon: Icon(Icons.delete),

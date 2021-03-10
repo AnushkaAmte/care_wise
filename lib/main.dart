@@ -1,3 +1,4 @@
+import 'package:carewise/screens/edit_medicine.dart';
 import 'package:carewise/widgets/tabbar_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
           LogbookScreen.routeName: (ctx) => LogbookScreen(),
           Inventory.routeName: (ctx) => Inventory(),
           AddMedicine.routeName: (ctx) => AddMedicine(),
+          EditMedicine.routeName: (ctx) => EditMedicine(),
         },
       ),
     );
