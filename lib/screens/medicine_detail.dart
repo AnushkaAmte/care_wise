@@ -46,9 +46,9 @@ class _MedicineDetailState extends State<MedicineDetail> {
           ),
           IconButton(
             icon: Icon(Icons.delete),
-            onPressed: () async {
+            onPressed: () {
               try {
-                await Provider.of<MedicineList>(context, listen: false)
+                Provider.of<MedicineList>(context, listen: false)
                     .deleteItem(loadedMedicine.id);
               } catch (error) {
                 Scaffold.of(context).showSnackBar(
@@ -57,8 +57,10 @@ class _MedicineDetailState extends State<MedicineDetail> {
                   ),
                 );
               }
-              Navigator.of(context)
-                  .pop(); //TRY: put this in a initstate or a didchangedependencies
+              Future.delayed(Duration(milliseconds: 10)).then((_) {
+                Navigator.of(context).pop();
+              });
+              //TRY: put this in a initstate or a didchangedependencies
             },
           )
         ],
