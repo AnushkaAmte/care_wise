@@ -1,4 +1,5 @@
 import 'package:carewise/providers/medicine.dart';
+import 'package:carewise/widgets/tabbar_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +14,7 @@ class EditMedicine extends StatefulWidget {
 
 class _EditMedicineState extends State<EditMedicine> {
   TimeOfDay _selectedTime;
-  var _isLoading = false;
+  //var _isLoading = false;
   final _form = GlobalKey<FormState>();
 
   String formatTimeOfDay(TimeOfDay tod) {
@@ -23,7 +24,51 @@ class _EditMedicineState extends State<EditMedicine> {
     return format.format(dt);
   }
 
-  /* void _presentTimePicker() {
+  var _editedMedicine = Medicine(
+      id: null,
+      title: '',
+      description: '',
+      quantity: 0,
+      alarmTime: null,
+      imageurl: '');
+
+  var _initValues = {
+    'title': '',
+    'description': '',
+    'price': '',
+    'alarmTime': '',
+  };
+
+  @override
+  void didChangeDependencies() {
+    final medID = ModalRoute.of(context).settings.arguments as String;
+    if (medID != null) {
+      _editedMedicine = Provider.of<MedicineList>(context).findById(medID);
+      _initValues = {
+        'title': _editedMedicine.title,
+        'description': _editedMedicine.description,
+        'quantity': _editedMedicine.quantity.toString(),
+        'imageUrl': _editedMedicine.imageurl,
+        'alarmTime': formatTimeOfDay(_editedMedicine.alarmTime),
+      };
+    }
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
+
+  void _saveForm() {
+    _form.currentState.save();
+    if (_editedMedicine.id != null) {
+      Provider.of<MedicineList>(context, listen: false)
+          .editAndSetMedicines(_editedMedicine.id, _editedMedicine);
+    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => TabBarScreen()),
+    );
+  }
+
+  void _presentTimePicker() {
     showTimePicker(context: context, initialTime: TimeOfDay.now())
         .then((pickedTime) {
       if (pickedTime == null) return;
@@ -31,7 +76,7 @@ class _EditMedicineState extends State<EditMedicine> {
       setState(() {
         _selectedTime = pickedTime;
         _editedMedicine = Medicine(
-            id: null,
+            id: _editedMedicine.id,
             title: _editedMedicine.title,
             description: _editedMedicine.description,
             alarmTime: _selectedTime,
@@ -39,179 +84,132 @@ class _EditMedicineState extends State<EditMedicine> {
             quantity: _editedMedicine.quantity);
       });
     });
-  } */
-
-  void _saveForm() {
-    setState(() {
-      _isLoading = true;
-    });
-    _form.currentState.save();
   }
 
   @override
   Widget build(BuildContext context) {
-    final medicineId = ModalRoute.of(context).settings.arguments as String;
-    final loadedMedicine =
-        Provider.of<MedicineList>(context).findById(medicineId);
-
-    var _editedMedicine = Medicine(
-        id: loadedMedicine.id,
-        title: loadedMedicine.title,
-        description: loadedMedicine.description,
-        quantity: loadedMedicine.quantity,
-        alarmTime: loadedMedicine.alarmTime,
-        imageurl: loadedMedicine.imageurl);
     return Scaffold(
       appBar: AppBar(
-        title: Text(loadedMedicine.title),
+        title: Text(_initValues['title']),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.save_rounded),
-            onPressed: () {
-              _saveForm();
-              Provider.of<MedicineList>(context, listen: false)
-                  .editAndSetMedicines(loadedMedicine.id, _editedMedicine);
-
-              setState(() {
-                _isLoading = false;
-              });
-              _isLoading
-                  ? Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : Navigator.of(context).pop();
-            },
+            onPressed: _saveForm,
           ),
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(10.0),
-              height: 250,
-              child: Image(
-                image: NetworkImage(loadedMedicine.imageurl),
+        child: Form(
+          key: _form,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
                 width: double.infinity,
-                height: 40,
-                fit: BoxFit.fill,
+                padding: EdgeInsets.all(10.0),
+                height: 250,
+                child: Image(
+                  image: NetworkImage(_editedMedicine.imageurl),
+                  width: double.infinity,
+                  height: 40,
+                  fit: BoxFit.fill,
+                ),
               ),
-            ),
-            SizedBox(
-              width: double.infinity,
-              height: 20,
-            ),
-            TextFormField(
-              decoration: InputDecoration(
-                helperText: 'Medicine Name',
-                hintText: loadedMedicine.title,
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0)),
+              SizedBox(
+                width: double.infinity,
+                height: 20,
               ),
-              style: TextStyle(fontSize: 20),
-              onSaved: (value) {
-                _editedMedicine = Medicine(
-                    id: loadedMedicine.id,
-                    title: value,
-                    description: loadedMedicine.description,
-                    alarmTime: loadedMedicine.alarmTime,
-                    imageurl: loadedMedicine.imageurl,
-                    quantity: loadedMedicine.quantity);
-              },
-            ),
-            SizedBox(
-              width: double.infinity,
-              height: 20,
-            ),
-            TextFormField(
-              decoration: InputDecoration(
-                hintText: loadedMedicine.description,
-                helperText: 'Description',
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0)),
+              TextFormField(
+                initialValue: _initValues['title'],
+                decoration: InputDecoration(
+                  helperText: 'Medicine Name',
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0)),
+                ),
+                style: TextStyle(fontSize: 20),
+                onSaved: (value) {
+                  _editedMedicine = Medicine(
+                      id: _editedMedicine.id,
+                      title: value,
+                      description: _editedMedicine.description,
+                      alarmTime: _editedMedicine.alarmTime,
+                      imageurl: _editedMedicine.imageurl,
+                      quantity: _editedMedicine.quantity);
+                },
               ),
-              style: TextStyle(fontSize: 20),
-              onSaved: (value) {
-                _editedMedicine = Medicine(
-                    id: loadedMedicine.id,
-                    title: loadedMedicine.title,
-                    description: value,
-                    alarmTime: loadedMedicine.alarmTime,
-                    imageurl: loadedMedicine.imageurl,
-                    quantity: loadedMedicine.quantity);
-              },
-            ),
-            SizedBox(
-              width: double.infinity,
-              height: 20,
-            ),
-            TextFormField(
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                hintText: loadedMedicine.quantity.toString(),
-                helperText: 'Quantity',
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0)),
+              SizedBox(
+                width: double.infinity,
+                height: 20,
               ),
-              style: TextStyle(fontSize: 20),
-              onSaved: (value) {
-                _editedMedicine = Medicine(
-                    id: loadedMedicine.id,
-                    title: loadedMedicine.title,
-                    description: loadedMedicine.description,
-                    alarmTime: loadedMedicine.alarmTime,
-                    imageurl: loadedMedicine.imageurl,
-                    quantity: int.parse(value));
-              },
-            ),
-            SizedBox(
-              width: double.infinity,
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Text(_selectedTime == null
-                    ? formatTimeOfDay(loadedMedicine.alarmTime)
-                    : formatTimeOfDay(_selectedTime)),
-                FlatButton(
-                  onPressed: () {
-                    showTimePicker(
-                            context: context, initialTime: TimeOfDay.now())
-                        .then((pickedTime) {
-                      if (pickedTime == null) return;
-
-                      setState(() {
-                        _selectedTime = pickedTime;
-                        _editedMedicine = Medicine(
-                            id: loadedMedicine.id,
-                            title: loadedMedicine.title,
-                            description: loadedMedicine.description,
-                            alarmTime: _selectedTime,
-                            imageurl: loadedMedicine.imageurl,
-                            quantity: loadedMedicine.quantity);
-                      });
-                    });
-
-                    // ignore: unnecessary_statements
-                  },
-                  child: Text("Select Time"),
-                  textColor: Colors.white,
-                  color: Colors.green,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(40.0)),
-                )
-              ],
-            ),
-          ],
+              TextFormField(
+                initialValue: _initValues['description'],
+                decoration: InputDecoration(
+                  helperText: 'Description',
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0)),
+                ),
+                style: TextStyle(fontSize: 20),
+                onSaved: (value) {
+                  _editedMedicine = Medicine(
+                      id: _editedMedicine.id,
+                      title: _editedMedicine.title,
+                      description: value,
+                      alarmTime: _editedMedicine.alarmTime,
+                      imageurl: _editedMedicine.imageurl,
+                      quantity: _editedMedicine.quantity);
+                },
+              ),
+              SizedBox(
+                width: double.infinity,
+                height: 20,
+              ),
+              TextFormField(
+                initialValue: _initValues['quantity'],
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  helperText: 'Quantity',
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0)),
+                ),
+                style: TextStyle(fontSize: 20),
+                onSaved: (value) {
+                  _editedMedicine = Medicine(
+                      id: _editedMedicine.id,
+                      title: _editedMedicine.title,
+                      description: _editedMedicine.description,
+                      alarmTime: _editedMedicine.alarmTime,
+                      imageurl: _editedMedicine.imageurl,
+                      quantity: int.parse(value));
+                },
+              ),
+              SizedBox(
+                width: double.infinity,
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Text(_selectedTime == null
+                      ? formatTimeOfDay(_editedMedicine.alarmTime)
+                      : formatTimeOfDay(_selectedTime)),
+                  FlatButton(
+                    onPressed: _presentTimePicker,
+                    child: Text("Select Time"),
+                    textColor: Colors.white,
+                    color: Colors.green,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(40.0)),
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
