@@ -94,7 +94,7 @@ class _EditMedicineState extends State<EditMedicine> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.save_rounded),
-            onPressed: _saveForm,
+            onPressed: _saveForm, //BUG: Bad state error
           ),
         ],
       ),
