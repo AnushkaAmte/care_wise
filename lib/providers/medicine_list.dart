@@ -83,6 +83,20 @@ class MedicineList with ChangeNotifier {
     return TimeOfDay.fromDateTime(format.parse(tod));
   }
 
+  Future<String> fetchUser() async {
+    const url =
+        'https://flutter-carewise-default-rtdb.firebaseio.com/users.json';
+    try {
+      final response = await http.get(url);
+      final fetchedData = json.decode(response.body) as Map<String, dynamic>;
+      String userid = fetchedData['id'];
+      print(userid);
+      return userid;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   Future<void> fetchAndSetMedicines() async {
     const url =
         'https://flutter-carewise-default-rtdb.firebaseio.com/medicines.json';
@@ -95,12 +109,14 @@ class MedicineList with ChangeNotifier {
       }
       extractedData.forEach((medID, medData) {
         loadedMeds.add(Medicine(
-            id: medID,
-            title: medData['title'],
-            alarmTime: stringToTimeOfDay(medData['alarmTime']),
-            imageurl: medData['imageUrl'],
-            description: medData['description'],
-            quantity: medData['quantity']));
+          id: medID,
+          title: medData['title'],
+          alarmTime: stringToTimeOfDay(medData['alarmTime']),
+          imageurl: medData['imageUrl'],
+          description: medData['description'],
+          quantity: medData['quantity'],
+          //userId: medData['userId'],
+        ));
       });
       _items = loadedMeds;
       notifyListeners();
@@ -120,7 +136,8 @@ class MedicineList with ChangeNotifier {
           'description': med.description,
           'alarmTime': formatTimeOfDay(med.alarmTime)?.toString(),
           'quantity': med.quantity,
-          'imageUrl': med.imageurl
+          'imageUrl': med.imageurl,
+          //'userId': fetchUser(),
         }),
       );
       final newMed = Medicine(

@@ -1,3 +1,4 @@
+import 'package:carewise/providers/auth.dart';
 import 'package:carewise/screens/edit_medicine.dart';
 import 'package:carewise/widgets/tabbar_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -37,7 +38,10 @@ class MyApp extends StatelessWidget {
         ),
         StreamProvider<FirebaseUser>.value(
           value: FirebaseAuth.instance.onAuthStateChanged,
-        )
+        ),
+        /* ChangeNotifierProvider(
+          create: (context) => Auth(),
+        ), */
       ],
       child: MaterialApp(
         title: 'CareWise',

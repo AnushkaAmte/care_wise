@@ -17,6 +17,7 @@ class Medicine with ChangeNotifier {
   bool isMorning;
   bool isAfternoon;
   bool isEvening;
+  String userId;
 
   Medicine({
     @required this.id,
@@ -25,6 +26,7 @@ class Medicine with ChangeNotifier {
     @required this.alarmTime,
     @required this.imageurl,
     @required this.quantity,
+    this.userId,
     this.isTaken = false,
     this.isMorning = false,
     this.isAfternoon = false,
