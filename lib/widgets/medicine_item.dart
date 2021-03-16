@@ -1,3 +1,4 @@
+import 'package:carewise/providers/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +28,7 @@ class MedicineItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final med = Provider.of<Medicine>(context);
     final log = Provider.of<LogBookProvider>(context, listen: false);
-
+    final auth = Provider.of<Auth>(context, listen: false);
     return GridTile(
       child: Center(
         child: Card(
@@ -76,7 +77,7 @@ class MedicineItem extends StatelessWidget {
                         //ERROR: Items out of the screen are not getting added to the logbook
                         //TODO: Resolve this error
                         //TODO: Check the logbook provider & changenotifier.value
-                        med.updateCount(med.id);
+                        med.updateCount(med.id, auth.token);
                         //This function works correctly
                         print(med.quantity);
                       },
