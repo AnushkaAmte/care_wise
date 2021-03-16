@@ -33,9 +33,9 @@ class Medicine with ChangeNotifier {
     this.isEvening = false,
   });
 
-  Future<void> updateCount(String id) async {
+  Future<void> updateCount(String id,String token) async {
     final url =
-        'https://flutter-carewise-default-rtdb.firebaseio.com/medicines/$id.json';
+        'https://flutter-carewise-default-rtdb.firebaseio.com/medicines/$id.json?auth=$token';
     try {
       await http.patch(url,
           body: json.encode({

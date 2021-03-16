@@ -50,6 +50,11 @@ class MedicineList with ChangeNotifier {
       isEvening: false, */
     ), */
   ];
+
+  final String authToken;
+  final String userId;
+  MedicineList(this.authToken, this.userId, this._items);
+
   var showMorningOnly = false;
   var showAfternoonOnly = false;
   var showEveningOnly = false;
@@ -98,8 +103,8 @@ class MedicineList with ChangeNotifier {
   }
 
   Future<void> fetchAndSetMedicines() async {
-    const url =
-        'https://flutter-carewise-default-rtdb.firebaseio.com/medicines.json';
+    final url =
+        'https://flutter-carewise-default-rtdb.firebaseio.com/medicines.json?auth=$authToken&orderBy="userId"&equalTo="$userId"';
     try {
       final response = await http.get(url);
       final List<Medicine> loadedMeds = [];
@@ -126,8 +131,8 @@ class MedicineList with ChangeNotifier {
   }
 
   Future<void> addItem(Medicine med) async {
-    const url =
-        'https://flutter-carewise-default-rtdb.firebaseio.com/medicines.json';
+    final url =
+        'https://flutter-carewise-default-rtdb.firebaseio.com/medicines.json?auth=$authToken';
     try {
       final response = await http.post(
         url,
@@ -137,7 +142,7 @@ class MedicineList with ChangeNotifier {
           'alarmTime': formatTimeOfDay(med.alarmTime)?.toString(),
           'quantity': med.quantity,
           'imageUrl': med.imageurl,
-          //'userId': fetchUser(),
+          'userId': userId,
         }),
       );
       final newMed = Medicine(
@@ -157,7 +162,7 @@ class MedicineList with ChangeNotifier {
 
   Future<void> deleteItem(String id) async {
     final url =
-        'https://flutter-carewise-default-rtdb.firebaseio.com/medicines/$id.json';
+        'https://flutter-carewise-default-rtdb.firebaseio.com/medicines/$id.json?auth=$authToken';
     final existingMedIndex = _items.indexWhere((med) => med.id == id);
     var existingMed = _items[existingMedIndex];
 
@@ -175,7 +180,7 @@ class MedicineList with ChangeNotifier {
   Future<void> editAndSetMedicines(String id, Medicine editedMed) async {
     final medIndex = _items.indexWhere((med) => med.id == id);
     final url =
-        'https://flutter-carewise-default-rtdb.firebaseio.com/medicines/$id.json';
+        'https://flutter-carewise-default-rtdb.firebaseio.com/medicines/$id.json?auth=$authToken';
     if (medIndex >= 0) {
       try {
         await http.patch(url,

@@ -17,6 +17,9 @@ class LogbookItem {
 
 class LogBookProvider with ChangeNotifier {
   List<LogbookItem> _items = [];
+  final String authToken;
+  final String userID;
+  LogBookProvider(this.authToken, this.userID, this._items);
 
   List<LogbookItem> get items {
     return [..._items];
@@ -27,8 +30,8 @@ class LogBookProvider with ChangeNotifier {
   }
 
   Future<void> fetchAndSetLogItems() async {
-    const url =
-        'https://flutter-carewise-default-rtdb.firebaseio.com/logitems.json';
+    final url =
+        'https://flutter-carewise-default-rtdb.firebaseio.com/logitems/$userID.json?auth=$authToken';
     final response = await http.get(url);
     final List<LogbookItem> _loadedLogItems = [];
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -46,8 +49,8 @@ class LogBookProvider with ChangeNotifier {
 
   Future<void> addItem(String id, String title) async {
     final date = DateTime.now();
-    const url =
-        'https://flutter-carewise-default-rtdb.firebaseio.com/logitems.json';
+    final url =
+        'https://flutter-carewise-default-rtdb.firebaseio.com/logitems/$userID.json?auth=$authToken';
     try {
       final response = await http.post(url,
           body: json.encode({
