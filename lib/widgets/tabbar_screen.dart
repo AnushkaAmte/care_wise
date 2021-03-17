@@ -1,4 +1,5 @@
 import 'package:carewise/providers/auth.dart';
+import 'package:carewise/screens/auth_screen.dart';
 //import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -79,8 +80,9 @@ class _TabBarScreenState extends State<TabBarScreen> {
                   icon: Icon(Icons.logout),
                   onPressed: () {
                     Provider.of<Auth>(context, listen: false).logout();
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pushReplacementNamed('/');
+                    //Navigator.of(context).pop();
+                    Navigator.of(context)
+                        .pushReplacementNamed(AuthScreen.routeName);
                   },
                 ),
               ]),

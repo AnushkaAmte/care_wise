@@ -93,13 +93,13 @@ class Auth with ChangeNotifier {
     }
     _token = extractedData['token'];
     _userId = extractedData['userId'];
-    _expiryDate = extractedData['expiryDate'];
+    _expiryDate = DateTime.parse(extractedData['expiryDate']);
     notifyListeners();
     _autoLogout();
     return true;
   }
 
-  Future<void> logout() async{
+  Future<void> logout() async {
     _token = null;
     _userId = null;
     _expiryDate = null;
