@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'dart:math';
+//import 'dart:math';
+import 'package:carewise/services/notifications.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:carewise/providers/medicine.dart';
@@ -92,7 +95,8 @@ class _AddMedicineState extends State<AddMedicine> {
   //BUG: validation is not working
   //CHECK: the values get reset to initialized values
   //TRY: try setState
-  void _saveForm() {
+  void _saveForm(Notifications manager) {
+    Random random = new Random();
     setState(() {
       _isLoading = true;
     });
@@ -101,11 +105,18 @@ class _AddMedicineState extends State<AddMedicine> {
       _form.currentState.save();
       print(_editedMedicine.alarmTime);
       print(_editedMedicine.title);
+      manager.showNotificationDaily(
+          random.nextInt(100),
+          "Time for your medicines! Name: ${_editedMedicine.title}",
+          "Description: ${_editedMedicine.description}",
+          _editedMedicine.alarmTime.hour,
+          _editedMedicine.alarmTime.minute);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    var notifications = Provider.of<Notifications>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("Add Medicine"),
@@ -272,7 +283,7 @@ class _AddMedicineState extends State<AddMedicine> {
                         ),
                         FlatButton(
                           onPressed: () {
-                            _saveForm();
+                            _saveForm(notifications);
                             Provider.of<MedicineList>(context, listen: false)
                                 .addItem(_editedMedicine)
                                 .catchError((err) {
