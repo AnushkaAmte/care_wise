@@ -17,6 +17,7 @@ import 'providers/medicine_list.dart';
 import 'providers/logbook_provider.dart';
 import 'providers/inventory_provider.dart';
 import 'providers/medicine.dart';
+import 'services/notifications.dart';
 
 void main() {
   runApp(MyApp());
@@ -45,6 +46,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => InventoryProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => Notifications(),
         ),
         StreamProvider<FirebaseUser>.value(
           value: FirebaseAuth.instance.onAuthStateChanged,
