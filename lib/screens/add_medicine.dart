@@ -66,8 +66,7 @@ class _AddMedicineState extends State<AddMedicine> {
         maxWidth: 640,
         imageQuality: 50);
     final pickedImageFile = File(pickedImage.path);
-    StorageReference ref =
-        storageReference.child("gs://${pickedImageFile.toString()}");
+    StorageReference ref = storageReference.child("gs://images");
     StorageUploadTask uploadTask = ref.putFile(pickedImageFile);
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
     String imageurl = await taskSnapshot.ref.getDownloadURL();
