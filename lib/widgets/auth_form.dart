@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+/* import 'package:flutter/material.dart';
+import 'package:email_auth/email_auth.dart';
 
 //import '../widgets/tabbar_screen.dart';
 
@@ -13,7 +14,9 @@ class AuthForm extends StatefulWidget {
 
 class _AuthFormState extends State<AuthForm> {
   final _formkey = GlobalKey<FormState>();
+  final TextEditingController _otpcontroller = TextEditingController();
   var _isLogin = true;
+  bool submitValid = false;
   var _userEmail = '';
   var _userName = '';
   var _userPassword = '';
@@ -31,6 +34,21 @@ class _AuthFormState extends State<AuthForm> {
         context,
       );
     }
+  }
+
+  void _sendOtp() async {
+    EmailAuth.sessionName = "Company Name";
+    bool result = await EmailAuth.sendOtp(receiverMail: _userEmail);
+    if (result) {
+      setState(() {
+        submitValid = true;
+      });
+    }
+  }
+
+  void verify() {
+    print(EmailAuth.validate(
+        receiverMail: _userEmail, userOTP: _otpcontroller.value.text));
   }
 
   @override
@@ -100,6 +118,39 @@ class _AuthFormState extends State<AuthForm> {
                     borderRadius: BorderRadius.circular(30.0)),
               )),
           SizedBox(width: double.infinity, height: 20.0),
+          FlatButton(
+            child: Text('Send OTP'),
+            onPressed: () {
+              _sendOtp();
+              showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return Container(
+                      height: 200,
+                      child: Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            TextFormField(
+                              controller: _otpcontroller,
+                            ),
+                            SizedBox(width: double.infinity, height: 10.0),
+                            FlatButton(
+                              onPressed: !submitValid
+                                  ? null
+                                  : () {
+                                      Navigator.of(context).pop();
+                                    },
+                              child: Text("Verify"),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  });
+            },
+          ),
+          SizedBox(width: double.infinity, height: 20.0),
           if (widget.isLoading) CircularProgressIndicator(),
           if (!widget.isLoading)
             FlatButton(
@@ -140,3 +191,4 @@ class _AuthFormState extends State<AuthForm> {
     );
   }
 }
+ */
