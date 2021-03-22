@@ -88,7 +88,7 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   void _sendOtp() async {
-    EmailAuth.sessionName = "Company Name";
+    EmailAuth.sessionName = "CareWise";
     bool result =
         await EmailAuth.sendOtp(receiverMail: _emailcontroller.value.text);
     if (result) {
@@ -168,29 +168,99 @@ class _AuthScreenState extends State<AuthScreen> {
                           )),
                     SizedBox(width: double.infinity, height: 10.0),
                     TextFormField(
-                        validator: (value) {
-                          if (value.isEmpty)
-                            return "Please enter a valid password";
-                          else
-                            return null;
-                        },
-                        onSaved: (value) {
-                          _authData['password'] = value;
-                        },
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.lock),
-                          hintText: 'Password',
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 20.0, horizontal: 30.0),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30.0)),
-                        )),
+                      validator: (value) {
+                        if (value.isEmpty)
+                          return "Please enter a valid password";
+                        else
+                          return null;
+                      },
+                      onSaved: (value) {
+                        _authData['password'] = value;
+                      },
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        icon: Icon(Icons.lock),
+                        hintText: 'Password',
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 20.0, horizontal: 30.0),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30.0)),
+                      ),
+                    ),
                     SizedBox(width: double.infinity, height: 20.0),
+                    if (_authMode == AuthMode.Signup)
+                      FlatButton(
+                        child: Text('Send OTP'),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(40.0)),
+                        color: Colors.green,
+                        textColor: Colors.white,
+                        onPressed: () {
+                          _sendOtp();
+                          showModalBottomSheet(
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (context) {
+                                return SingleChildScrollView(
+                                  child: Container(
+                                    padding: EdgeInsets.only(
+                                        bottom: MediaQuery.of(context)
+                                            .viewInsets
+                                            .bottom),
+                                    height: 200,
+                                    child: Center(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          TextFormField(
+                                            controller: _otpcontroller,
+                                            decoration: InputDecoration(
+                                              icon: Icon(Icons.lock),
+                                              hintText: 'Enter OTP',
+                                              contentPadding:
+                                                  EdgeInsets.symmetric(
+                                                      vertical: 20.0,
+                                                      horizontal: 30.0),
+                                              border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          30.0)),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                              width: double.infinity,
+                                              height: 10.0),
+                                          FlatButton(
+                                            onPressed: !submitValid
+                                                ? null
+                                                : () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                            child: Text("Verify"),
+                                            disabledColor: Colors.grey[600],
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        40.0)),
+                                            color: Colors.green,
+                                            textColor: Colors.white,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              });
+                        },
+                      ),
                     if (_isLoading) CircularProgressIndicator(),
                     if (!_isLoading)
                       FlatButton(
-                        onPressed: _submit,
+                        onPressed:
+                            (_authMode == AuthMode.Signup && !submitValid)
+                                ? null
+                                : _submit,
                         /*  Navigator.push(
                 context,
                 new MaterialPageRoute(builder: (ctxt) => new TabBarScreen()),
@@ -203,46 +273,13 @@ class _AuthScreenState extends State<AuthScreen> {
                         color: Colors.green,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(40.0)),
+                        disabledColor: Colors.grey[400],
                       ),
                     SizedBox(width: double.infinity, height: 20.0),
                     Text(_authMode == AuthMode.Login
                         ? 'Not a User?'
                         : 'Already a User?'),
                     SizedBox(width: double.infinity, height: 20.0),
-                    FlatButton(
-                      child: Text('Send OTP'),
-                      onPressed: () {
-                        _sendOtp();
-                        showModalBottomSheet(
-                            context: context,
-                            builder: (context) {
-                              return Container(
-                                height: 200,
-                                child: Center(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      TextFormField(
-                                        controller: _otpcontroller,
-                                      ),
-                                      SizedBox(
-                                          width: double.infinity, height: 10.0),
-                                      FlatButton(
-                                        onPressed: !submitValid
-                                            ? null
-                                            : () {
-                                                Navigator.of(context).pop();
-                                              },
-                                        child: Text("Verify"),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              );
-                            });
-                      },
-                    ),
                     FlatButton(
                       onPressed: _switchAuthMode,
                       child: Text(_authMode == AuthMode.Login
