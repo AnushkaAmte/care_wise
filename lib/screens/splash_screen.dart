@@ -9,7 +9,7 @@ class SplashScreen extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Container(
-                //width: double.infinity, TEST THIS
+                width: double.infinity,
                 child: Center(
                   child: Text(
                     'CAREWISE',
