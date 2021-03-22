@@ -1,5 +1,6 @@
 import 'package:carewise/models/custom_exceptions.dart';
 import 'package:carewise/providers/auth.dart';
+import 'package:email_auth/email_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +22,9 @@ class _AuthScreenState extends State<AuthScreen> {
     'userName': '',
   };
   var _isLoading = false;
+  bool submitValid = false;
+  final TextEditingController _otpcontroller = TextEditingController();
+  final TextEditingController _emailcontroller = TextEditingController();
   void _displayErr(String message) {
     showDialog(
         context: context,
@@ -83,6 +87,23 @@ class _AuthScreenState extends State<AuthScreen> {
     }
   }
 
+  void _sendOtp() async {
+    EmailAuth.sessionName = "Company Name";
+    bool result =
+        await EmailAuth.sendOtp(receiverMail: _emailcontroller.value.text);
+    if (result) {
+      setState(() {
+        submitValid = true;
+      });
+    }
+  }
+
+  void verify() {
+    print(EmailAuth.validate(
+        receiverMail: _emailcontroller.value.text,
+        userOTP: _otpcontroller.value.text));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,6 +126,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 child: Column(
                   children: <Widget>[
                     TextFormField(
+                      controller: _emailcontroller,
                       validator: (value) {
                         if (value.isEmpty || !value.contains("@"))
                           return "Please enter a valid email";
@@ -186,6 +208,41 @@ class _AuthScreenState extends State<AuthScreen> {
                     Text(_authMode == AuthMode.Login
                         ? 'Not a User?'
                         : 'Already a User?'),
+                    SizedBox(width: double.infinity, height: 20.0),
+                    FlatButton(
+                      child: Text('Send OTP'),
+                      onPressed: () {
+                        _sendOtp();
+                        showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return Container(
+                                height: 200,
+                                child: Center(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      TextFormField(
+                                        controller: _otpcontroller,
+                                      ),
+                                      SizedBox(
+                                          width: double.infinity, height: 10.0),
+                                      FlatButton(
+                                        onPressed: !submitValid
+                                            ? null
+                                            : () {
+                                                Navigator.of(context).pop();
+                                              },
+                                        child: Text("Verify"),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            });
+                      },
+                    ),
                     FlatButton(
                       onPressed: _switchAuthMode,
                       child: Text(_authMode == AuthMode.Login
