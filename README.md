@@ -38,6 +38,6 @@ The Medicine Log helps the user track their doses
 <li>
 Timely Notifications ensure the user never forgets a dose!
   <br>
-<img src="(screenshots\Screenshot_20210325-004913.png?raw=true"width =250 height= 500/>
+<img src="screenshots\Screenshot_20210325-004913.png?raw=true"width =250 height= 500/>
 </li>
 </ul>
