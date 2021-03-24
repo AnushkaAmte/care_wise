@@ -11,11 +11,12 @@ class LogItem extends StatelessWidget {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5.0),
       child: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: ListTile(
-            title: Text(title),
-            trailing: Text(day.toString()), //FIX this
-          )),
+        padding: EdgeInsets.all(8.0),
+        child: ListTile(
+          title: Text(title),
+          //trailing: Text(day.toString(),
+        ), //FIX this
+      ),
     );
   }
 }
