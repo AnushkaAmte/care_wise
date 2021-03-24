@@ -10,8 +10,8 @@
 
 <ul>
 <li>The User can create a new account and login
-![Alt text](screenshots\Screenshot_20210325-000038.png?raw=true)
-![Alt text](screenshots\Screenshot_20210325-000046.png?raw=true)
+<img src= "screenshots\Screenshot_20210325-000038.png?raw=true"/>
+<img src="screenshots\Screenshot_20210325-000046.png?raw=true"/>
 </li>
 <li>
 The HomeScreen
