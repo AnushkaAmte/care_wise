@@ -1,9 +1,10 @@
-import 'package:carewise/screens/edit_medicine.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/medicine_list.dart';
+import '../screens/edit_medicine.dart';
+import '../widgets/tabbar_screen.dart';
 
 class MedicineDetail extends StatefulWidget {
   static const routeName = '/medicine-detail';
@@ -47,20 +48,43 @@ class _MedicineDetailState extends State<MedicineDetail> {
           IconButton(
             icon: Icon(Icons.delete),
             onPressed: () {
-              try {
-                Provider.of<MedicineList>(context, listen: false)
-                    .deleteItem(loadedMedicine.id);
-              } catch (error) {
-                Scaffold.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Deleting failed'),
-                  ),
-                );
-              }
-              Future.delayed(Duration(milliseconds: 10)).then((_) {
-                Navigator.of(context).pop();
-              });
-              //TRY: put this in a initstate or a didchangedependencies
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('Delete Medicine'),
+                  content: Text("Do you want to delete this medicine?"),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text("No"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    FlatButton(
+                        child: Text('Yes'),
+                        onPressed: () {
+                          try {
+                            Provider.of<MedicineList>(context, listen: false)
+                                .deleteItem(loadedMedicine.id);
+                          } catch (error) {
+                            Scaffold.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Deleting failed'),
+                              ),
+                            );
+                          }
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TabBarScreen()),
+                          );
+                        }
+                        //TRY: put this in a initstate or a didchangedependencies
+
+                        ),
+                  ],
+                ),
+              );
             },
           )
         ],
