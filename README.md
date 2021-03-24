@@ -10,6 +10,7 @@
 
 <ul>
 <li>The User can create a new account and login
+  <br>
 <img src= "screenshots\Screenshot_20210325-000038.png?raw=true" width =250 height= 500/>
 <img src="screenshots\Screenshot_20210325-000046.png?raw=true" width =250 height= 500/>
 </li>
