@@ -10,6 +10,7 @@ import '../screens/inventory.dart';
 import '../screens/logbook_screen.dart';
 
 class TabBarScreen extends StatefulWidget {
+  
   @override
   _TabBarScreenState createState() => _TabBarScreenState();
 }
